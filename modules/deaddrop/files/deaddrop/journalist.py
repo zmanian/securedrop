@@ -6,7 +6,7 @@ import uuid
 from flask import Flask, request, render_template, send_file
 from flask_wtf.csrf import CsrfProtect
 
-import config, version, crypto, store, background
+import config, version, crypto, store, background, db
 
 app = Flask(__name__, template_folder=config.JOURNALIST_TEMPLATES_DIR)
 app.secret_key = config.SECRET_KEY
@@ -30,13 +30,16 @@ def no_cache(response):
 def index():
   dirs = os.listdir(config.STORE_DIR)
   cols = []
+  db_session = db.sqlalchemy_handle()
   for d in dirs:
     if not os.listdir(store.path(d)): continue
+    display_id = db.display_id(d, db_session)
     cols.append(dict(
       name=d,
-      sid=crypto.displayid(d),
+      sid=display_id,
       date=str(datetime.fromtimestamp(os.stat(store.path(d)).st_mtime)).split('.')[0]
     ))
+  db_session.close()
   cols.sort(key=lambda x: x['date'], reverse=True)
   return render_template('index.html', cols=cols)
 
@@ -54,7 +57,7 @@ def col(sid):
   haskey = bool(crypto.getkey(sid))
 
   return render_template("col.html", sid=sid,
-      codename=crypto.displayid(sid), docs=docs, haskey=haskey)
+      codename=db.display_id(sid, db.sqlalchemy_handle()), docs=docs, haskey=haskey)
 
 @app.route('/col/<sid>/<fn>')
 def doc(sid, fn):
@@ -67,7 +70,7 @@ def reply():
   sid, msg = request.form['sid'], request.form['msg']
   crypto.encrypt(crypto.getkey(sid), request.form['msg'], output=
     store.path(sid, 'reply-%s.gpg' % uuid.uuid4()))
-  return render_template('reply.html', sid=sid, codename=crypto.displayid(sid))
+  return render_template('reply.html', sid=sid, codename=db.display_id(sid, db.sqlalchemy_handle()))
 
 if __name__ == "__main__":
   # TODO: make sure this gets run by the web server
