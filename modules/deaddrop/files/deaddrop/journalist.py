@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 import uuid
 
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, make_response
 from flask_wtf.csrf import CsrfProtect
 
 import config, version, crypto, store, background, db
@@ -71,6 +71,14 @@ def reply():
   crypto.encrypt(crypto.getkey(sid), request.form['msg'], output=
     store.path(sid, 'reply-%s.gpg' % uuid.uuid4()))
   return render_template('reply.html', sid=sid, codename=db.display_id(sid, db.sqlalchemy_handle()))
+
+@app.route('/regenerate-code', methods=('POST',))
+def generate_code():
+  sid = request.form['sid']
+  db.regenerate_display_id(sid)
+  response = make_response("", 302)
+  response.headers.add('Location', '/col/'+sid)
+  return response
 
 if __name__ == "__main__":
   # TODO: make sure this gets run by the web server
