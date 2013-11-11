@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, MetaData, Table, Column, String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from config import DATABASE
-import crypto
+import crypto_util
 
 metadata = MetaData()
 
@@ -31,19 +31,19 @@ def display_id(filesystem_id, session):
   if len(journalist_designation) > 0:
     return journalist_designation[0][0]
   else:
-    return crypto.displayid(filesystem_id)
+    return crypto_util.displayid(filesystem_id)
 
 def regenerate_display_id(filesystem_id):
   session = sqlalchemy_handle()
   try:
     source_obj = session.query(sources.c.journalist_designation).filter(sources.c.filesystem_id == filesystem_id).one()
     add = sources.update().values(
-      journalist_designation=crypto.displayid(display_id(filesystem_id, session))
+      journalist_designation=crypto_util.displayid(display_id(filesystem_id, session))
     ).where(sources.c.filesystem_id == filesystem_id)
   except NoResultFound:
     add = sources.insert().values(
       filesystem_id=filesystem_id,
-      journalist_designation=crypto.displayid(display_id(filesystem_id, session))
+      journalist_designation=crypto_util.displayid(display_id(filesystem_id, session))
     )
   session.execute(add)
   session.commit()

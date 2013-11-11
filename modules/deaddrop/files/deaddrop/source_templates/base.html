@@ -4,8 +4,15 @@
     <link rel="stylesheet" href="/static/css/securedrop.css" type="text/css" media="all" />
     <link rel="icon" type="image/png" href="/static/i/favicon.png">
     <title>SecureDrop</title>
+    {% block extrahead %}{% endblock %}
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=True, category_filter=["header-warning"]) %}
+      {% for category, message in messages %}
+      <p class="{{ category }}">{{ message|safe }}</p>
+      {% endfor %}
+    {% endwith %}
+
     <div id="wrapper">
       {% block header %}
       <div id="header">
