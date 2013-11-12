@@ -12,7 +12,7 @@
 
 {% if docs %}
 <p><br />Here are the documents available. The documents are stored encrypted for security. To read them, you will need to decrypt them using PGP.</p>
-<form action="/delete" method="post">
+<form action="/bulk" method="post">
 <ul id="submissions">
 {% for doc in docs %}
 <li>
@@ -26,7 +26,10 @@
 {% endfor %}
 <input name="csrf_token" type="hidden" value="{{ csrf_token() }}"/>
 <input type="hidden" name="sid" value="{{ sid }}" autocomplete="off"/>
-<p><input type="submit" value="Delete selected" /> (<span id="select_all">select all</span>, <span id="select_none">select none</span>)</p>
+<p>
+  <button type="submit" name="action" value="download">Download selected</button>
+  <button type="submit" name="action" value="delete">Delete selected</button>
+  (<span id="select_all">select all</span>, <span id="select_none">select none</span>)</p>
 </ul>
 </form>
 {% else %}
@@ -41,8 +44,16 @@
   <textarea name="msg" cols="72" rows="10" autocomplete="off"></textarea><br />
   <button id="reply-button" class="button-custom" type="submit">Submit</button>
 </form>
+{% elif flagged %}
+<p class="notification">You've flagged this source for reply.</p>
+<p>An encryption key will be generated for the source the next time they log in, after which you will be able to reply to the source here.</p>
 {% else %}
-<p>A key is currently being generated, which will enable you to write a secure reply to the person who submitted these documents.  Please check this page again in a few minutes if you would like to write a reply.
+<p>Click below if you would like to write a reply to this source.</p>
+<form action="/flag" method="post">
+    <input type="hidden" name="sid" value="{{ sid }}" autocomplete="off" />
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button id="flag-button" class="button-custom" type="submit">Flag this source for reply.</button>
+</form>
 {% endif %}
 </div>
 
