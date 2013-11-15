@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
-from config import DATABASE
+from config import DATABASE_ENGINE, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_NAME
 import crypto_util
 
 metadata = MetaData()
@@ -12,11 +12,11 @@ sources = Table('sources', metadata,
 )
 
 engine = create_engine(
-    DATABASE['engine'] + '://' +
-    DATABASE['username'] + ':' +
-    DATABASE['password'] + '@' +
-    DATABASE['host'] + '/' +
-    DATABASE['name'], echo=False
+    DATABASE_ENGINE + '://' +
+    DATABASE_USERNAME + ':' +
+    DATABASE_PASSWORD + '@' +
+    DATABASE_HOST + '/' +
+    DATABASE_NAME, echo=False
 )
 
 def create_tables():

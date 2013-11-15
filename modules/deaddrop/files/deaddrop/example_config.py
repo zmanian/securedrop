@@ -13,13 +13,11 @@ WORD_LIST='./wordlist'
 BCRYPT_SALT='$2a$12$gLZnkcyhZBrWbCZKHKYgKee8g/Yb9O7.24/H.09Yu9Jt9hzW6n0Ky' # bcrypt.gensalt()
 SECRET_KEY='\xa1\x93\xedr\xb6\xa4\x93\x01fG\x8d\x13\x08\xa8\xb3_S\x06\xa1\xbd\xd9\x1b!\xc5' # import os; os.urandom(24)
 
-DATABASE = {
-    'engine': 'mysql',
-    'username': 'securedrop',
-    'password': '',
-    'host': 'localhost',
-    'name': 'securedrop'
-}
+DATABASE_ENGINE='mysql'
+DATABASE_USERNAME='securedrop'
+DATABASE_PASSWORD=''
+DATABASE_HOST='localhost'
+DATABASE_NAME='securedrop'
 
 # Use different settings for tests
 import os
