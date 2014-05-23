@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 # HACK: fix the Python path for Travis
 import sys
 sys.path.append(os.path.abspath(os.path.join(__file__, '../..')))
+print sys.path
 
 # Set environment variable so config.py uses a test environment
 os.environ['SECUREDROP_ENV'] = 'test'
