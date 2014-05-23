@@ -207,8 +207,8 @@ EOF
 
 sudo chmod +x /etc/init.d/xvfb
 sudo service xvfb start
-sudo sh -c 'echo "export DISPLAY=:0.0" >> /etc/environment'
-export DISPLAY=:0.0
+sudo sh -c 'echo "export DISPLAY=:1" >> /etc/environment'
+export DISPLAY=:1
 
 echo ""
 echo "Running unit tests... these should all pass!"
