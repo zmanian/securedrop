@@ -65,14 +65,18 @@ fi
 
 echo "Welcome to the SecureDrop setup script for Debian/Ubuntu."
 
-echo "Installing dependencies: "$DEPENDENCIES
-sudo apt-get update
-sudo apt-get -y install $DEPENDENCIES
+# For Travis, we install the deps via .travis.yml and don't need to do it again
+# here
+if [ "$UNAIDED_INSTALL" != true ]; then
+    echo "Installing dependencies: "$DEPENDENCIES
+    sudo apt-get update
+    sudo apt-get -y install $DEPENDENCIES
 
-sudo pip install --upgrade distribute
-sudo pip install -r source-requirements.txt
-sudo pip install -r document-requirements.txt
-sudo pip install -r test-requirements.txt
+    sudo pip install --upgrade distribute
+    sudo pip install -r source-requirements.txt
+    sudo pip install -r document-requirements.txt
+    sudo pip install -r test-requirements.txt
+fi
 
 echo "Setting up configurations..."
 # set up the securedrop root directory
@@ -208,42 +212,39 @@ EOF
 sudo chmod +x /etc/init.d/xvfb
 sudo service xvfb start
 sudo sh -c 'echo "export DISPLAY=:1" >> /etc/profile'
-source /etc/profile # source immediatly for travis
+source /etc/profile # source immediately for travis
 
-# DEBUG
-# I just installed mock, why can't I import it?
-# Is it something weird with the Python environment created by the tests or test.sh?
-echo "PYTHONPATH: $PYTHONPATH"
-echo "Checking mock"
-python -c "import mock; print 'imported mock'"
 
-echo ""
-echo "Running unit tests... these should all pass!"
-set +e # turn flag off so we can check if the tests failed
-./test.sh
+# For Travis, we run the tests from .travis.yml
+if [ "$UNAIDED_INSTALL" != true ]; then
+    echo ""
+    echo "Running unit tests... these should all pass!"
+    set +e # turn flag off so we can check if the tests failed
+    ./test.sh
 
-TEST_RC=$?
+    TEST_RC=$?
 
-if [[ $TEST_RC != 0 ]]; then
-    echo "$bold$red It looks like something went wrong in your dev setup."
-    echo "Please let us know by opening an issue on Github: https://github.com/freedomofpress/securedrop/issues/new"
+    if [[ $TEST_RC != 0 ]]; then
+        echo "$bold$red It looks like something went wrong in your dev setup."
+        echo "Please let us know by opening an issue on Github: https://github.com/freedomofpress/securedrop/issues/new"
+        echo $normalcolor
+    fi
+
+    echo $bold$blue
+    echo "And you're done!"
     echo $normalcolor
+    echo "To make sure everything works, try running the app:"
+    echo ""
+    echo "$ vagrant ssh"
+    echo "$ cd /vagrant/securedrop"
+    echo "$ python source.py &"
+    echo "$ python journalist.py &"
+    echo ""
+    echo "Now you can visit the site at 127.0.0.1:{8080,8081} in your browser."
+    echo ""
+    echo "To re-run tests:"
+    echo "cd /vagrant/securedrop"
+    echo "./test.sh"
 fi
-
-echo $bold$blue
-echo "And you're done!"
-echo $normalcolor
-echo "To make sure everything works, try running the app:"
-echo ""
-echo "$ vagrant ssh"
-echo "$ cd /vagrant/securedrop"
-echo "$ python source.py &"
-echo "$ python journalist.py &"
-echo ""
-echo "Now you can visit the site at 127.0.0.1:{8080,8081} in your browser."
-echo ""
-echo "To re-run tests:"
-echo "cd /vagrant/securedrop"
-echo "./test.sh"
 
 exit $TEST_RC

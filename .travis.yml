@@ -11,6 +11,6 @@ install:
   - pip install -r securedrop/source-requirements.txt
   - pip install -r securedrop/document-requirements.txt
   - pip install -r securedrop/test-requirements.txt
-script:
-  - python securedrop/test_mock.py
   - ./setup_dev.sh -u
+script:
+  - ./securedrop/test.sh
