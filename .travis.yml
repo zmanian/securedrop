@@ -13,4 +13,6 @@ install:
   - pip install -r securedrop/test-requirements.txt
   - ./setup_dev.sh -u
 script:
-  - ./securedrop/test.sh
+  - python securedrop/tests/unit_tests.py
+  - python tests/functional/submit_and_retrieve_message.py
+  - python tests/functional/submit_and_retrieve_file.py
