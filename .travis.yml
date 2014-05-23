@@ -5,8 +5,8 @@ virtualenv:
   system_site_packages: true
 install:
   - pip install --upgrade distribute
-  - pip install -r source-requirements.txt
-  - pip install -r document-requirements.txt
-  - pip install -r test-requirements.txt
+  - pip install -r securedrop/source-requirements.txt
+  - pip install -r securedrop/document-requirements.txt
+  - pip install -r securedrop/test-requirements.txt
 script:
   - ./setup_dev.sh -u
