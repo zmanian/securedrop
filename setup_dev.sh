@@ -65,14 +65,14 @@ fi
 
 echo "Welcome to the SecureDrop setup script for Debian/Ubuntu."
 
-#echo "Installing dependencies: "$DEPENDENCIES
-#sudo apt-get update
-#sudo apt-get -y install $DEPENDENCIES
-#
-#sudo pip install --upgrade distribute
-#sudo pip install -r source-requirements.txt
-#sudo pip install -r document-requirements.txt
-#sudo pip install -r test-requirements.txt
+echo "Installing dependencies: "$DEPENDENCIES
+sudo apt-get update
+sudo apt-get -y install $DEPENDENCIES
+
+sudo pip install --upgrade distribute
+sudo pip install -r source-requirements.txt
+sudo pip install -r document-requirements.txt
+sudo pip install -r test-requirements.txt
 
 echo "Setting up configurations..."
 # set up the securedrop root directory
@@ -209,6 +209,13 @@ sudo chmod +x /etc/init.d/xvfb
 sudo service xvfb start
 sudo sh -c 'echo "export DISPLAY=:1" >> /etc/profile'
 source /etc/profile # source immediatly for travis
+
+# DEBUG
+# I just installed mock, why can't I import it?
+# Is it something weird with the Python environment created by the tests or test.sh?
+echo "PYTHONPATH: $PYTHONPATH"
+echo "Checking mock"
+python -c "import mock; print 'imported mock'"
 
 echo ""
 echo "Running unit tests... these should all pass!"
