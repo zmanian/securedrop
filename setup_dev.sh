@@ -65,14 +65,14 @@ fi
 
 echo "Welcome to the SecureDrop setup script for Debian/Ubuntu."
 
-echo "Installing dependencies: "$DEPENDENCIES
-sudo apt-get update
-sudo apt-get -y install $DEPENDENCIES
-
-sudo pip install --upgrade distribute
-sudo pip install -r source-requirements.txt
-sudo pip install -r document-requirements.txt
-sudo pip install -r test-requirements.txt
+#echo "Installing dependencies: "$DEPENDENCIES
+#sudo apt-get update
+#sudo apt-get -y install $DEPENDENCIES
+#
+#sudo pip install --upgrade distribute
+#sudo pip install -r source-requirements.txt
+#sudo pip install -r document-requirements.txt
+#sudo pip install -r test-requirements.txt
 
 echo "Setting up configurations..."
 # set up the securedrop root directory
