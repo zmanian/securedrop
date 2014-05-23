@@ -1,3 +1,8 @@
+# HACK: fix the Python path for Travis
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(__file__, '../..')))
+sys.path.append(os.path.abspath(os.path.join(__file__, '../../..')))
+
 import functional_test
 import source_navigation_steps
 import journalist_navigation_steps
