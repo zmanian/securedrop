@@ -211,6 +211,9 @@ sudo service xvfb start
 sudo sh -c 'echo "export DISPLAY=:1" >> /etc/environment'
 export DISPLAY=:1
 
+# DEBUG failing tests on Travis
+env
+
 echo ""
 echo "Running unit tests... these should all pass!"
 set +e # turn flag off so we can check if the tests failed
