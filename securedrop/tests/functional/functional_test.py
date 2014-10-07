@@ -39,6 +39,8 @@ class FunctionalTest():
         return webdriver.Firefox(firefox_binary=firefox)
 
     def setUp(self):
+        os.environ['DISPLAY'] = ":1"
+
         # Patch the two-factor verification to avoid intermittent errors
         patcher = mock.patch('journalist.Journalist.verify_token')
         self.addCleanup(patcher.stop)
