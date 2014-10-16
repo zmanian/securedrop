@@ -79,4 +79,4 @@
   with_items: ossec_apt_dependencies
 
 - name: install local securedrop ossec deb package
-  apt: deb="{{ securedrop_repo }}/{{ ossec_build_dir }}.deb" state=installed
+  apt: deb="{{ securedrop_repo }}/{{ ossec_build_dir }}.deb" state=latest
