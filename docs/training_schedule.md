@@ -38,8 +38,8 @@ Participants: journalists, editors, securedrop admins, ossec alert recipients an
 * How to securely publicize the organizations source interface Tor URL
 * Distribute important info
   * 3rd party security mailing lists to subscribe
-  * https://pressfreedomfoundation.org/staff
-  * https://pressfreedomfoundation.org/securedrop
+  * https://freedom.press/staff
+  * https://freedom.press/securedrop
   * Hardware for SecureDrop
   * SecureDrop Deployment Best Practices
   * Source Best Practice Guide
