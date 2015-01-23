@@ -104,19 +104,32 @@ You will need the following inventory of hardware items for the installation. Fo
 * Monitor Server
 * Admin Workstation (any spare computer that can be connected to the firewall and can run Tails)
 
-### USBs/DVDs/CDs
+### Removable Media
 
- * CD, DVD, or USB to use when [installing Ubuntu on the Application Server and the Monitor Server](/docs/ubuntu_config.md).
- * CD, DVD, or USB to use when [setting up Tails Live with persistence](/docs/tails_guide.md).
- * Brand new USB, marked *transfer*, to use as the *Transfer Device*.
+You will need removable media for each of the following roles. We recommend labeling the individual drives.
 
-Additionally, you will need a minimum of 4 USB sticks which will become Tails Live USB's with persistence. You should mark two *offline*, one *online*, and one *admin*. This is enough to set up a system with one admin and one journalist (note that the same person can perform both of these roles). To add more administrators or journalists, you will need more USB sticks.
+ * *Ubuntu Installer*, a USB, DVD, or CD used to install Ubuntu on the Application and Monitor servers
+ * *Tails Installer*, a USB, or DVD used to [set up Tails Live USB's with persistence](/docs/tails_guide.md).
 
-Finally, each user, whether admin or journalist, will need a *Two-Factor Authenticator*.
+For the day-to-day operation, each **journalist** will need three USB sticks:
 
-Each journalist will also need a *Transfer Device* for transferring files between the *Secure Viewing Station* and their *Journalist Workstation*, and a personal GPG key. Make sure you [create GPG keys](/docs/install.md#set-up-journalist-gpg-keys) for journalists who do not already have one.
+* *offline*, a Tails Live USB booted on an airgapped computer. This stores the *Application Private Key* and is used to decrypt and view submissions.
+* *online*, a Tails Live USB booted on a networked computer. This is used to access the *Document Interface*.
+* *transfer*, an ordinary USB drive used to transfer files between the *online* and *offline* machines, and between the *Secure Viewing Station* and the *Journalist Workstation*.
 
-The second *offline* Tails Live USB with persistence will be used as the encrypted offline backup. This device will be a copy of the main *SVS* Tails Live USB with persistence.
+Each SecureDrop **administrator** will need an *admin* Tails Live USB, which is used for the initial installation and for future maintenance of the system.
+
+Every user (both admins and journalists), needs a *Two-Factor Authenticator*.
+
+Finally, we recommend backing up the *Application Keypair* to an encrypted external drive, labeled *backup*. If all copies of this key are lost, you will be unable to decrypt any prior submissions and will need to replace the key on the server.
+
+### GPG Keys
+
+If your organization has multiple journalists that will be sharing copies of submissions received through SecureDrop, we strongly recommend that they **avoid sharing decrypted copies**. This is because common file formats often contain invisible metadata which may be used to identify a source, so an adversary who is able to intercept a decrypted submission (say, as it is transferred over a network, or on a drive left lying around) *may* be able to use it to identify a source.
+
+Instead, we recommend journalists create personal GPG keys and share the public keys with their coworkers. When a SecureDrop submission needs to be shared, it should first be encrypted with the intended recipient's public key.
+
+[More information](install.md#set-up-journalist-gpg-keys)
 
 ### Passphrases
 
