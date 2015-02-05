@@ -23,6 +23,7 @@ build_app_code_dir: "{{ securedrop_repo }}/securedrop"
 securedrop_pip_requirements: "{{ securedrop_code }}/requirements/securedrop-requirements.txt"
 test_pip_requirements: "{{ securedrop_code }}/requirements/test-requirements.txt"
 dev_deps:
+  - libffi-dev
   - libssl-dev
   - python-dev
   - python-pip
