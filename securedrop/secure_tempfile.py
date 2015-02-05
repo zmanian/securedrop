@@ -15,7 +15,7 @@ class SecureTemporaryFile(_TemporaryFileWrapper):
     forensic disk analysis.
 
     Adapated from Globaleaks' GLSecureTemporaryFile: https://github.com/globaleaks/GlobaLeaks/blob/master/backend/globaleaks/security.py#L35
-  
+
     WARNING: you can't use this like a normal file object. It supports
     being written to exactly once, then read from exactly once.
     """
@@ -77,4 +77,4 @@ class SecureTemporaryFile(_TemporaryFileWrapper):
 
     def close(self):
         return _TemporaryFileWrapper.close(self)
-        
+
