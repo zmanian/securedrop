@@ -11,7 +11,11 @@ import crypto_util
 
 
 def clean_root():
-    shutil.rmtree(config.SECUREDROP_DATA_ROOT)
+    def debug_rmtree(function, path, excinfo):
+        print "Error in {}('{}')".format(function, path)
+        print os.listdir(path)
+        print excinfo
+    shutil.rmtree(config.SECUREDROP_DATA_ROOT, onerror=debug_rmtree)
 
 
 def create_directories():
