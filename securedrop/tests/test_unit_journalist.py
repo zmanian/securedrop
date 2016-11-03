@@ -12,7 +12,7 @@ from flask_testing import TestCase
 import crypto_util
 import journalist
 import common
-from db import (db_session, Source, Submission, Journalist,
+from db import (db_session, Source, Submission, Journalist, Reply,
                InvalidPasswordLength)
 
 # Set environment variable so config.py uses a test environment
@@ -31,6 +31,14 @@ class TestJournalist(TestCase):
         db_session.commit()
         files = ['1-abc1-msg.gpg', '2-abc2-msg.gpg']
         filenames = common.setup_test_docs(sid, files)
+        return source, files
+
+    def add_source_and_replies(self):
+        source, files = self.add_source_and_submissions()
+        files = ['1-def-reply.gpg', '2-def-reply.gpg']
+        filenames = common.setup_test_replies(source.filesystem_id,
+                                              self.user.id,
+                                              files)
         return source, files
 
     def setUp(self):
@@ -180,7 +188,7 @@ class TestJournalist(TestCase):
             password='not',
             password_again='thesame'))
         self.assert_redirects(res, url_for('edit_account'))
-        
+
     def test_valid_user_password_change(self):
         self._login_user()
         res = self.client.post(url_for('edit_account'), data=dict(
@@ -232,6 +240,24 @@ class TestJournalist(TestCase):
         # Submissions should be gone
         results = db_session.query(Submission.source_id == source.id).all()
         self.assertEqual(results, [])
+
+
+    def test_delete_source_deletes_replies(self):
+        """Verify that when a source is deleted, the replies that
+        correspond to them are also deleted."""
+
+        source, files = self.add_source_and_replies()
+
+        journalist.delete_collection(source.filesystem_id)
+
+        # Source should be gone
+        results = db_session.query(Source).filter(Source.id == source.id).all()
+        self.assertEqual(results, [])
+
+        # Replies should be gone
+        results = db_session.query(Reply.source_id == source.id).all()
+        self.assertEqual(results, [])
+
 
     def test_bulk_download(self):
         source, files = self.add_source_and_submissions()
