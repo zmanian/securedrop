@@ -13,7 +13,8 @@ from flask_testing import TestCase
 import crypto_util
 import journalist
 import common
-from db import db_session, Source, Journalist, InvalidPasswordLength
+from db import (db_session, Source, Journalist, InvalidPasswordLength,
+                Submission)
 
 # Set environment variable so config.py uses a test environment
 os.environ['SECUREDROP_ENV'] = 'test'
@@ -23,6 +24,15 @@ class TestJournalist(TestCase):
 
     def create_app(self):
         return journalist.app
+
+    def add_source_and_submissions(self):
+        sid = 'EQZGCJBRGISGOTC2NZVWG6LILJBHEV3CINNEWSCLLFTUWZJPKJFECLS2NZ4G4U3QOZCFKTTPNZMVIWDCJBBHMUDBGFHXCQ3R'
+        source = Source(sid, crypto_util.display_id())
+        db_session.add(source)
+        db_session.commit()
+        files = ['1-abc1-msg.gpg', '2-abc2-msg.gpg']
+        filenames = common.setup_test_docs(sid, files)
+        return source, files
 
     def setUp(self):
         common.shared_setup()
@@ -206,20 +216,37 @@ class TestJournalist(TestCase):
         # should redirect to verification page
         self.assert_redirects(res, url_for('account_new_two_factor'))
 
+    def test_get_unread_subs_when_all_unread(self):
+        source, files = self.add_source_and_submissions()
+
+        unread_subs = journalist.get_unread_subs(source)
+        unread_subs_filenames = [sub.filename for sub in unread_subs]
+
+        self.assertEqual(files, unread_subs_filenames)
+
+    def test_get_unread_subs_when_one_read(self):
+        source, files = self.add_source_and_submissions()
+
+        # Read the first submission
+        submission = db_session.query(Submission) \
+                               .filter(source == source).first()
+        submission.downloaded = True
+        db_session.commit()
+        files.remove(submission.filename)
+
+        unread_subs = journalist.get_unread_subs(source)
+        unread_subs_filenames = [sub.filename for sub in unread_subs]
+        self.assertEqual(files, unread_subs_filenames)
+
     # TODO: more tests for admin interface
 
     def test_bulk_download(self):
-        sid = 'EQZGCJBRGISGOTC2NZVWG6LILJBHEV3CINNEWSCLLFTUWZJPKJFECLS2NZ4G4U3QOZCFKTTPNZMVIWDCJBBHMUDBGFHXCQ3R'
-        source = Source(sid, crypto_util.display_id())
-        db_session.add(source)
-        db_session.commit()
-        files = ['1-abc1-msg.gpg', '2-abc2-msg.gpg']
-        filenames = common.setup_test_docs(sid, files)
+        source, files = self.add_source_and_submissions()
 
         self._login_user()
         rv = self.client.post('/bulk', data=dict(
             action='download',
-            sid=sid,
+            sid=source.filesystem_id,
             doc_names_selected=files
         ))
 
