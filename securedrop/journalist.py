@@ -433,13 +433,20 @@ def index():
     return render_template('index.html', unstarred=unstarred, starred=starred)
 
 
+def get_unread_subs(source):
+    unread_subs = [submission for submission in source.submissions
+                   if not submission.downloaded]
+    return unread_subs
+
+
 @app.route('/col/<sid>')
 @login_required
 def col(sid):
     source = get_source(sid)
     source.has_key = crypto_util.getkey(sid)
-    unread_subs = [submission for submission in source.submissions if not submission.downloaded]
-    return render_template("col.html", sid=sid, source=source, unread_subs=unread_subs)
+    unread_subs = get_unread_subs(source)
+    return render_template("col.html", sid=sid, source=source,
+                           unread_subs=unread_subs)
 
 
 def delete_collection(source_id):
