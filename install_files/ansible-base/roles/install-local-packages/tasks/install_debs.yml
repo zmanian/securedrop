@@ -7,13 +7,11 @@
     dest: /root/
   with_items: local_deb_packages
 
-# There's a known bug in Ansible that causes installing
-# .deb packages via the apt module to fail when invoked
-# with `with_items`. A temporary workaround is to use
-# `with_indexed_items` and reference the value, which tricks
-# the `apt` module into installing each deb package separately,
-# rather than joining into a single comma-separated string.
+# Using `dpkg` via `command` rather than the `deb` parameter to the `apt`
+# module to ensure installation every time, regardless of whether packages
+# changed. SecureDrop deb package builds are not deterministic, so the `copy`
+# task above will always report changed. Ignore version number in the control
+# field and force installation every time.
 - name: Install locally built deb packages.
-  apt:
-    deb: /root/{{ item.1 }}
-  with_indexed_items: local_deb_packages
+  command: dpkg -i /root/{{ item }}
+  with_items: local_deb_packages
