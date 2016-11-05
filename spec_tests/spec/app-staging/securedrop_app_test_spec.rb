@@ -25,9 +25,9 @@ end
 # what's specified in `securedrop/requirements/test-requirements.txt`,
 # since they're pulled in via the prod packages on apt.freedom.press.
 pip_dependencies = [
-  'Flask-Testing==0.5.0',
+  'Flask-Testing==0.6.1',
   'mock==2.0.0',
-  'pytest==3.0.1',
+  'pytest==3.0.3',
   'selenium==2.53.6',
 ]
 # ensure pip depdendencies are installed in staging.
