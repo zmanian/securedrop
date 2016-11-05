@@ -86,7 +86,9 @@ end
 describe command('aptitude --simulate -y safe-upgrade') do
   its(:exit_status) { should eq 0 }
   its(:stdout) { should match /^No packages will be installed, upgraded, or removed\.$/ }
-  its(:stdout) { should match /0 packages upgraded, 0 newly installed, 0 to remove and 0 not upgraded\./ }
+  # Temporarily allowing "1 not upgraded" since we're pinning a version of firefox
+  # known to work well with our version of selenium; see #1445.
+  its(:stdout) { should match /^0 packages upgraded, 0 newly installed, 0 to remove and [01] not upgraded\.$/ }
 end
 
 # TODO: In order to validate the intended system state post-provisioning,

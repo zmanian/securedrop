@@ -96,7 +96,9 @@ end
 
 # ensure old packages have been autoremoved
 describe command('apt-get --dry-run autoremove') do
-  its(:stdout) { should match /^0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded\.$/ }
+  # Temporarily allowing "1 not upgraded" since we're pinning a version of firefox
+  # known to work well with our version of selenium; see #1445.
+  its(:stdout) { should match /^0 upgraded, 0 newly installed, 0 to remove and [01] not upgraded\.$/ }
   its(:exit_status) { should eq 0 }
 end
 
