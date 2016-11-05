@@ -29,7 +29,6 @@ Vagrant.configure("2") do |config|
       }
     end
     development.vm.provider "virtualbox" do |v|
-      v.name = "development"
       # Running the functional tests with Selenium/Firefox has started causing out-of-memory errors.
       #
       # This started around October 14th and was first observed on the task-queue branch. There are two likely causes:
@@ -46,9 +45,6 @@ Vagrant.configure("2") do |config|
     staging.vm.box = "bento/ubuntu-14.04"
     staging.vm.network "private_network", ip: "10.0.1.3", virtualbox__intnet: true
     staging.vm.synced_folder './', '/vagrant', disabled: true
-    staging.vm.provider "virtualbox" do |v|
-      v.name = "mon-staging"
-    end
   end
 
   config.vm.define 'app-staging', autostart: false do |staging|
@@ -59,7 +55,6 @@ Vagrant.configure("2") do |config|
     staging.vm.network "forwarded_port", guest: 8080, host: 8083
     staging.vm.synced_folder './', '/vagrant', disabled: true
     staging.vm.provider "virtualbox" do |v|
-      v.name = "app-staging"
       # Running the functional tests with Selenium/Firefox has started causing out-of-memory errors.
       #
       # This started around October 14th and was first observed on the task-queue branch. There are two likely causes:
@@ -95,9 +90,6 @@ Vagrant.configure("2") do |config|
     prod.vm.box = "bento/ubuntu-14.04"
     prod.vm.network "private_network", ip: "10.0.1.5", virtualbox__intnet: true
     prod.vm.synced_folder './', '/vagrant', disabled: true
-    prod.vm.provider "virtualbox" do |v|
-      v.name = "mon-prod"
-    end
   end
 
   config.vm.define 'app-prod', autostart: false do |prod|
@@ -111,7 +103,6 @@ Vagrant.configure("2") do |config|
     prod.vm.network "private_network", ip: "10.0.1.4", virtualbox__intnet: true
     prod.vm.synced_folder './', '/vagrant', disabled: true
     prod.vm.provider "virtualbox" do |v|
-      v.name = "app-prod"
       # Running the functional tests with Selenium/Firefox has started causing out-of-memory errors.
       #
       # This started around October 14th and was first observed on the task-queue branch. There are two likely causes:
@@ -144,9 +135,6 @@ Vagrant.configure("2") do |config|
         'securedrop:children' => %w(development),
       }
     end
-    build.vm.provider "virtualbox" do |v|
-      v.name = "build"
-    end
   end
 
   # VM for testing Snap CI configuration changes.
@@ -160,9 +148,6 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "install_files/ansible-base/securedrop-snapci.yml"
       ansible.verbose = 'v'
       ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
-    end
-    snapci.vm.provider "virtualbox" do |v|
-      v.name = "snapci"
     end
   end
 
