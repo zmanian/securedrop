@@ -32,6 +32,8 @@ Upgrade Procedure
    version. Throughout the rest of this document, substitute ``0.3.x`` with the
    current release's version number.
 
+include:: verify-get-tag.rst
+
 #. Checkout and verify the current release on the Admin Workstation. ::
 
      cd /home/amnesia/Persistent/SecureDrop

@@ -82,6 +82,8 @@ Greeter*.
 
      git stash save "site specific configs"
 
+include:: verify-git-tag.rst
+
 #. Pull the latest code ::
 
      git pull

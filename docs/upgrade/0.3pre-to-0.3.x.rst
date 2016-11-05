@@ -53,6 +53,8 @@ set an *Adminstrator Password* in the *Tails Greeter*.
 
      git pull
 
+include:: verify-git-tag.rst
+
 #. Verify the signed git tag for the latest stable release ::
 
      git tag -v 0.3.x
